@@ -22,6 +22,7 @@ SETTING_OUTPUTFILE = "outputFile"
 SETTING_CREATECSSSOURCEMAPS = "createCssSourceMaps"
 SETTING_AUTOPREFIX = "autoprefix"
 SETTING_DISABLEVERBOSE = 'disableVerbose'
+SETTING_INCLUDEPATH = 'includePath'
 
 
 class Compiler:
@@ -82,7 +83,10 @@ class Compiler:
                 SETTING_DISABLEVERBOSE,
                 settings.get(SETTING_DISABLEVERBOSE)
             ),
-
+            'include_path': project_settings.get(
+                SETTING_INCLUDEPATH,
+                settings.get(SETTING_INCLUDEPATH)
+            ),
         }
 
         # Get the filename and encode accordingly.
@@ -294,11 +298,15 @@ class Compiler:
         if self.settings['autoprefix']:
             args.append('--autoprefix')
             print('[less2css] add prefixes to {}'.format(css_file_name))
-
+            
         # you must opt in to disable this option
         if not self.settings['disable_verbose']:
             args.append('--verbose')
             print('[less2css] Using verbose mode')
+
+        if self.settings['include_path']:
+            args.append('--include-path='+self.settings['include_path'])
+            print('[less2css] Adding include path')
 
         print("[less2css] Converting " + less_file + " to " + css_file_name)
 
